@@ -8,6 +8,7 @@ echo "Descargango archivo: "$fasta_file" en la carpeta "$2
 echo "-----------------------------------------------------\n"
 wget  -P $2 $1
 
+
 if  [ "$3" == "yes" ]
 then
   echo "Descomprimiendo archivo"$fasta_file
