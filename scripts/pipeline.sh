@@ -5,20 +5,23 @@ echo $WD
 #Download all the files specified in data/filenames
 for url in $(cat $WD/data/urls) #TODO
 do
-    bash scripts/download.sh $url data
+    #bash scripts/download.sh $url data
+    echo "hola"
 done
 
 # Download the contaminants fasta file, and uncompress it
-bash scripts/download.sh "https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz" res yes #TODO
+#bash scripts/download.sh "https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz" res yes #TODO
+#Crear el archivo de salida dentro de res
+mkdir -p $WD/res/contaminants_idx
 
 # Index the contaminants file
-#bash scripts/index.sh res/contaminants.fasta res/contaminants_idx
+bash scripts/index.sh $WD/res/contaminants.fasta $WD/res/contaminants_idx
 
 # Merge the samples into a single file
-#for sid in $(<list_of_sample_ids) #TODO
-#do
-#    bash scripts/merge_fastqs.sh data out/merged $sid
-#done
+for sid in $(cat $WD/data/urls) #TODO
+do
+    bash scripts/merge_fastqs.sh data out/merged $sid
+done
 
 # TODO: run cutadapt for all merged files
 # cutadapt -m 18 -a TGGAATTCTCGGGTGCCAAGG --discard-untrimmed -o <trimmed_file> <input_file> > <log_file>
