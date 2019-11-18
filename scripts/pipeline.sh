@@ -11,15 +11,14 @@ done
 
 # Download the contaminants fasta file, and uncompress it
 #bash scripts/download.sh "https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz" res yes #TODO
-#Crear el archivo de salida dentro de res
-mkdir -p $WD/res/contaminants_idx
 
 # Index the contaminants file
-bash scripts/index.sh $WD/res/contaminants.fasta $WD/res/contaminants_idx
+#bash scripts/index.sh $WD/res/contaminants.fasta $WD/res/contaminants_idx
 
 # Merge the samples into a single file
-for sid in $(cat $WD/data/urls) #TODO
+for sid in $(ls data/*.fastq.gz | cut -d "-" -f1 | sed 's:data/::' | sort | uniq) #TODO
 do
+    echo $id
     bash scripts/merge_fastqs.sh data out/merged $sid
 done
 
