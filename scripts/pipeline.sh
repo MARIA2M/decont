@@ -1,6 +1,5 @@
 
 export WD=$(pwd)
-echo $WD
 
 #Download all the files specified in data/filenames
 for url in $(cat $WD/data/urls) #TODO
@@ -18,12 +17,17 @@ done
 # Merge the samples into a single file
 for sid in $(ls data/*.fastq.gz | cut -d "-" -f1 | sed 's:data/::' | sort | uniq) #TODO
 do
-    echo $id
     bash scripts/merge_fastqs.sh data out/merged $sid
 done
 
 # TODO: run cutadapt for all merged files
-# cutadapt -m 18 -a TGGAATTCTCGGGTGCCAAGG --discard-untrimmed -o <trimmed_file> <input_file> > <log_file>
+echo "Running cutadapt..."
+mkdir -p log/cutadapt
+mkdir -p out/cutadapt
+for sampleid in $(ls out/merged/*.fastq.gz | cut -d "-" -f1 | sed 's:out/merged/::' | sort | uniq) #TODO
+do
+  cutadapt -m 18 -a TGGAATTCTCGGGTGCCAAGG --discard-untrimmed -o out/cutadapt/${sampleid}.trimmed.fastq.gz out/merged/${sampleid}-12.5dpp_sRNA_merged.fastq.gz > log/cutadapt/${sampleid}.log
+done
 
 #TODO: run STAR for all trimmed files
 #for fname in out/trimmed/*.fastq.gz
