@@ -8,6 +8,7 @@ mkdir -p $WD/$2
 
 if [[-f "res/contaminants.fasta"]]
 then
-  # Indexado 
+  # Indexado
+  echo "si"
   STAR --runThreadN 4 --runMode genomeGenerate --genomeDir $2 --genomeFastaFiles $1 --genomeSAindexNbases 9
 fi

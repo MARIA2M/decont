@@ -39,7 +39,12 @@ do
     # you will need to obtain the sample ID from the filename #TODO
     sid=$(echo $fname  | sed 's:out/trimmed/::' | cut -d "." -f1)
     mkdir -p out/star/$sid
-    STAR --runThreadN 4 --genomeDir res/contaminants_idx --outReadsUnmapped Fastx --readFilesIn $fname --readFilesCommand zcat --outFileNamePrefix out/star/$sid/ >> log/cutadapt/$sid.log
+    STAR --runThreadN 4 --genomeDir res/contaminants_idx --outReadsUnmapped Fastx --readFilesIn $fname --readFilesCommand zcat --outFileNamePrefix out/star/$sid/
+done
+
+for sampleid in $(ls out/merged/*.fastq.gz | cut -d "-" -f1 | sed 's:out/merged/::' | sort | uniq)
+do
+    # Retocar log nuevo:  /out/star/$sampleid/Log.final.out >> log/cutadapt/$sampleid.log
 done
 
 # TODO: create a log file containing information from cutadapt and star logs
