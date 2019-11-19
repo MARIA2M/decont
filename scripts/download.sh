@@ -15,3 +15,7 @@ then
   echo "-----------------------------------------------------\n"
   gunzip $2/$fasta_file
 fi
+
+
+# Ejercicio extra: Opción alternativa
+# wget -P $2 -i $2/urls

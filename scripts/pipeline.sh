@@ -7,9 +7,6 @@ do
     bash scripts/download.sh $url data
 done
 
-# Ejercicio extra: Opción alternativa
-# wget -i $2/url
-
 # Download the contaminants fasta file, and uncompress it
 bash scripts/download.sh "https://bioinformatics.cnio.es/data/courses/decont/contaminants.fasta.gz" res yes #TODO
 
