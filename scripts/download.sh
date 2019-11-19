@@ -5,14 +5,14 @@
 fasta_file=$(basename $1)
 
 echo "Descargango archivo: "$fasta_file" en la carpeta "$2
-echo "-----------------------------------------------------\n"
+echo "-----------------------------------------------------"
 wget  -P $2 $1
 
 
 if  [ "$3" == "yes" ]
 then
   echo "Descomprimiendo archivo"$fasta_file
-  echo "-----------------------------------------------------\n"
+  echo "-----------------------------------------------------"
   gunzip $2/$fasta_file
 fi
 

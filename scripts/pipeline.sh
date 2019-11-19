@@ -39,12 +39,25 @@ do
     STAR --runThreadN 4 --genomeDir res/contaminants_idx --outReadsUnmapped Fastx --readFilesIn $fname --readFilesCommand zcat --outFileNamePrefix out/star/$sid/
 done
 
-for sampleid in $(ls out/merged/*.fastq.gz | cut -d "-" -f1 | sed 's:out/merged/::' | sort | uniq)
-do
-    # Retocar log nuevo:  /out/star/$sampleid/Log.final.out >> log/cutadapt/$sampleid.log
-done
 
 # TODO: create a log file containing information from cutadapt and star logs
 # (this should be a single log file, and information should be *appended* to it on each run)
 # - cutadapt: Reads with adapters and total basepairs
 # - star: Percentages of uniquely mapped reads, reads mapped to multiple loci, and to too many loci
+
+for sid in $(ls data/*.fastq.gz | cut -d "-" -f1 | sed 's:data/::' | sort | uniq) #TODO
+do
+
+  echo  "-------------------------------" >> log/pipeline.log
+  echo  "Sample: "$sid >> log/pipeline.log
+  echo  "-------------------------------" >> log/pipeline.log
+
+  echo  "cutadapt:" >> log/pipeline.log
+  echo  $(cat log/cutadapt/$sid.log  | grep -i "Reads with adapters") >> log/pipeline.log
+  echo  $(cat log/cutadapt/$sid.log  | grep -i "total basepairs") >> log/pipeline.log
+  echo  " " >> log/pipeline.log
+  echo  "star:" >> log/pipeline.log
+  echo  $(cat out/star/$sid/Log.final.out  | grep -e "Uniquely mapped reads %") >> log/pipeline.log
+  echo  $(cat out/star/$sid/Log.final.out  | grep -e "% of reads mapped to multiple loci") >> log/pipeline.log
+  echo  $(cat out/star/$sid/Log.final.out  | grep -e "% of reads mapped to too many loci ") >> log/pipeline.log
+done
