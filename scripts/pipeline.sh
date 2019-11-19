@@ -32,13 +32,14 @@ mkdir -p out/trimmed
 # Discard adatpters
 for sampleid in $(ls out/merged/*.fastq.gz | cut -d "-" -f1 | sed 's:out/merged/::' | sort | uniq) #TODO
 do
-  if [ -f $sampleid-12.5dpp_sRNA_merged.fastq.gz ]
+  if [ -f out/merged/$sampleid-12.5dpp_sRNA_merged.fastq.gz ]
+  then
     # Trimming merged files
     echo "Running cutadapt..."
-    cutadapt -m 18 -a TGGAATTCTCGGGTGCCAAGG --discard-untrimmed -o out/trimmed/$sampleid.trimmed.fastq.gz out/merged/$sampleid-12.5dpp_sRNA_merged.fastq.gz > log/cutadapt/${sampleid}.log
+    cutadapt -m 18 -a TGGAATTCTCGGGTGCCAAGG --discard-untrimmed -o out/trimmed/$sampleid.trimmed.fastq.gz out/merged/$sampleid-12.5dpp_sRNA_merged.fastq.gz > log/cutadapt/$sampleid.log
   else
     # Print error message and exit from pipeline
-    echo "ERROR: file not detected :"$sampleid"-12.5dpp_sRNA_merged.fastq.gz"
+    echo "ERROR: file not detected :$sampleid-12.5dpp_sRNA_merged.fastq.gz"
     exit 1
   fi
 done
@@ -49,25 +50,24 @@ done
 # Align trimmed files against indexed contaminants list (fasta)
 for fname in out/trimmed/*.fastq.gz
 do
-    # you will need to obtain the sample ID from the filename #TODO
+  # you will need to obtain the sample ID from the filename TtDO
 
-    # Sample ID
-    sid=$(echo $fname  | sed 's:out/trimmed/::' | cut -d "." -f1)
+  # Sample ID
+  sid=$(echo $fname  | sed 's:out/trimmed/::' | cut -d "." -f1)
 
-    # Create subfolders in star
-    mkdir -p out/star/$sid
+  # Create subfolders in star
+  mkdir -p out/star/$sid
 
-    #Test if exist trimmed files and res/contaminants_idx is not empty
-    if [ -f $fname && "$(ls -A res/contaminants_idx)"  ]
-      # Star aligment against indexed fasta with contaminants list (as Genome)
-      echo "Running STAR alignment..."
-      STAR --runThreadN 4 --genomeDir res/contaminants_idx --outReadsUnmapped Fastx --readFilesIn $fname --readFilesCommand zcat --outFileNamePrefix out/star/$sid/
-
-    else
-      # Print error message and exit from pipeline
-      echo "ERROR: file not detected: "$fname" or res/contaminants_idx is empty"
-      exit 1
-    if
+  if [ -f $fname ]
+  then
+    # Star aligment against indexed fasta with contaminants list (as Genome)
+    echo "Running STAR alignment..."
+    STAR --runThreadN 4 --genomeDir res/contaminants_idx --outReadsUnmapped Fastx --readFilesIn $fname --readFilesCommand zcat --outFileNamePrefix out/star/$sid/
+  else
+    # Print error message and exit from pipeline
+    echo "ERROR: file not detected: $fname or res/contaminants_idx is empty"
+    exit 1
+  fi
 done
 
 

@@ -6,7 +6,7 @@
 mkdir -p $2
 
 # Check if file required exist
-if [ -f $1 ]
+if [ "$(ls -A $1)" ]
 then
   echo "Mergin files..."
 # Merge file with the same Sample ID
