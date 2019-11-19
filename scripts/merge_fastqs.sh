@@ -2,8 +2,17 @@
 # into a single file, which should be stored in the output directory specified by the second argument.
 # The directory containing the samples is indicated by the first argument.
 
-# Crear ruta de salida
-mkdir -p $WD/$2
+# Create subfolders in out
+mkdir -p $2
 
-# Merge archivos del mismo tipo según su sample_id
-cat $WD/$1/$3-12.5dpp.1.1s_sRNA.fastq.gz $WD/$1/$3-12.5dpp.1.2s_sRNA.fastq.gz  > $WD/$2/$3-12.5dpp_sRNA_merged.fastq.gz
+# Check if file required exist
+if [ -f $1 ]
+then
+  echo "Mergin files..."
+# Merge file with the same Sample ID
+cat $1/$3-12.5dpp.1.1s_sRNA.fastq.gz $1/$3-12.5dpp.1.2s_sRNA.fastq.gz  > $2/$3-12.5dpp_sRNA_merged.fastq.gz
+else
+  # Print error message and exit from pipeline
+  echo "ERROR: file not detected from sample: $3"
+  exit 1
+fi

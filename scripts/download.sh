@@ -1,21 +1,28 @@
 # This script should download the file specified in the first argument ($1), place it in the directory specified in the second argument,
 # and *optionally* uncompress the downloaded file with gunzip if the third argument contains the word "yes".
 
-# Nombre del archivo que queremos descargar
-fasta_file=$(basename $1)
+# Name of file in url
+file_name=$(basename $1)
 
-echo "Descargango archivo: "$fasta_file" en la carpeta "$2
-echo "-----------------------------------------------------"
-wget  -P $2 $1
-
-
-if  [ "$3" == "yes" ]
+# Check if file exists and download it
+if [ ! -f "$2/$file_name" ]
 then
-  echo "Descomprimiendo archivo"$fasta_file
-  echo "-----------------------------------------------------"
-  gunzip $2/$fasta_file
+  echo "Downloading file: "$file_name" in the folder "$2
+  echo "---------------------------------------------------------------------"
+  echo
+  wget  -P $2 $1
+else
+  echo "The file $file_name have already been downloaded"
+  echo
 fi
 
-
-# Ejercicio extra: Opción alternativa
-# wget -P $2 -i $2/urls
+# Check third argument to unzip the file
+if  [ "$3" == "yes" ]
+then
+  if [ -f "$2/$file_name" ]
+  then
+    echo "Unzipping file: "$file_name
+    echo "---------------------------------------------------------------------"
+    gunzip -k $2/$file_name
+  fi
+fi
